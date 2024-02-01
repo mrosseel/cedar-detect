@@ -1,0 +1,32 @@
+name: Rust Cross-Compilation
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - armv7-unknown-linux-gnueabihf
+          - aarch64-unknown-linux-gnu
+          - x86_64-apple-darwin
+          - x86_64-unknown-linux-gnu
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        target: ${{ matrix.target }}
+        override: true
+
+    - name: Install cross-compilation tool (cross)
+      run: cargo install cross
+
+    - name: Build for target
+      run: cross build --target ${{ matrix.target }}
+
