@@ -38,7 +38,7 @@ jobs:
       if: startsWith(matrix.target, 'arm') || startsWith(matrix.target, 'aarch64')
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
+        sudo apt-get install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf gcc-aarch64-linux-gnu
         rustup target add ${{ matrix.target }}
 
     - name: Build
