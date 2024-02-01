@@ -24,8 +24,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install protobuf-compiler
+    - name: Setup protoc
+      uses: arduino/setup-protoc@v3.0.0
 
     - name: Install Rust
       uses: actions-rs/toolchain@v1
