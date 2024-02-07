@@ -346,7 +346,8 @@ struct CandidateFrom1D {
 //   image is returned here.
 // Option<GrayImage>: if `create_binned_image8` is true, the 8 bit binned image
 //   is returned here.
-// P: the peak pixel value of the identified star candidates.
+// P: the peak pixel value of the identified star candidates. If there are no
+//   star candidates, this value has no meaning.
 //
 // P: u8 (original) or u16 (2x2 binned).
 fn scan_image_for_candidates<P: Primitive + std::fmt::Debug>(
@@ -370,7 +371,7 @@ where u16: From<P>
     let image_pixels: &Vec<P> = image.as_raw();
     let mut candidates = Vec::<CandidateFrom1D>::new();
     let sigma_noise_2 = cmp::max((2.0 * sigma * noise_estimate + 0.5) as i16, 2);
-    let sigma_noise_3 = cmp::max((3.0 * sigma * noise_estimate + 0.5) as i16, 1);
+    let sigma_noise_3 = cmp::max((3.0 * sigma * noise_estimate + 0.5) as i16, 3);
 
     let (binned_width, binned_height) = (width / 2, height / 2);
     let mut binned_image10_data = Vec::<u16>::new();
@@ -1104,7 +1105,8 @@ fn stats_for_histogram(histogram: &[u32; 1024])
 /// Option<GrayImage>: if `return_binned_image` is true, the 2x2 binning of `image`
 ///   is returned.
 ///
-/// u8: the peak pixel value of the identified star candidates.
+/// u8: the peak pixel value of the identified star candidates. If there are no
+///   star candidates, this value has no meaning.
 pub fn get_stars_from_image(
     image: &GrayImage,
     noise_estimate: f32, sigma: f32, max_size: u32,
@@ -1236,7 +1238,7 @@ pub fn summarize_region_of_interest(image: &GrayImage, roi: &Rect,
     let mut cleaned_image = image.clone();
 
     let sigma_noise_2 = cmp::max((2.0 * sigma * noise_estimate) as i16, 2);
-    let sigma_noise_3 = cmp::max((3.0 * sigma * noise_estimate) as i16, 1);
+    let sigma_noise_3 = cmp::max((3.0 * sigma * noise_estimate) as i16, 3);
     for rownum in roi.top()..=roi.bottom() {
         // Get the slice of image_pixels corresponding to this row of the ROI.
         let row_start = (rownum * width as i32) as usize;
